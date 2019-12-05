@@ -123,12 +123,20 @@ postRouter.post('/putPost',(req,res)=>{
 		return res.json({success:true,})
 	});
 });
+//delete the posts
 postRouter.delete('/deletePost',(req,res)=>{
 	const{id}= req.body
 	postData.findByIdAndDelete(id,(err)=>{
 		if(err) return res.json({success: false, error: err});
 		return res.json({success:true,})
 
+	});
+});
+postRouter.post('/updatePost'(req,res)=>{
+	const{id,update} = req.body 
+	postData.findByIdAndUpdate(id,update,(err)=>{
+		if(err) return res.json({success:false, error:err})
+			return res.json({success:true})
 	});
 });
 
