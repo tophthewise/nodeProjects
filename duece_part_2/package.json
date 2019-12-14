@@ -1,0 +1,16 @@
+{
+  "name": "duece_part_2",
+  "version": "1.0.0",
+  "description": "concurrent package controller",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+     "start":"concurrently \"cd backend && node server.js\" \"cd frontend && npm start\""
+
+  },
+  "author": "Toph",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^5.0.1"
+  }
+}
