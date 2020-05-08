@@ -1,0 +1,65 @@
+const express = require("express");
+//use process.env varibles to keep private variables
+require("dotenv").config;
+
+// Express Middleware
+const helmet = require("helmet"); //creates heaers that protect from attacks (security)
+const bodyParser = require("body-parser"); //turns response into usable format
+const cors = require("cors"); // allows/disallows cross-site communication
+const morgan = require("morgan"); //logs requests
+
+//db Connection with local Host
+var db = require("knex")({
+  client: "pg",
+  connection: {
+    host: "127.0.0.1",
+    user: "",
+    password: "",
+    database: "Fashion_DB",
+  },
+});
+
+//Controllers: aka the db queries
+const main = require("./controllers/main");
+
+// App
+const app = express();
+
+//App middleware
+const whitelist = ["http://localhost:3001"];
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1 || !origin) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not Allowed by CORS"));
+    }
+  },
+};
+app.use(helmet());
+app.use(cors(corsOptions));
+app.use(express.json());
+app.use(function (req, res, next) {
+  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+  res.setHeader("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
+  res.setHeader(
+    "Access-Control-Allow-Headers",
+    "Content-Type, Access-Control-Allow-Headers"
+  );
+  next();
+});
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(morgan("combined")); //use tiny or combined
+
+// App Routs - Auth
+app.get("/crud", (req, res) => main.getTableData(req, res, db));
+
+// App Server Connection
+app.listen(process.env.PORT || 3000, () => {
+  console.log(`app is running on port ${process.env.PORT || 3000}`);
+});
