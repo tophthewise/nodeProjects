@@ -17,9 +17,9 @@ const getTableData = (req, res, db) => {
     .join("brand", "brand_id", "=", "description.brand")
     .join("material", "material_id", "=", "description.material")
     .select(
+      "article.article_name",
       "color.color",
       "fashion.fashion",
-      "article.article_name",
       "brand.brand",
       "sex.sex",
       "description.price",
